@@ -261,3 +261,5 @@ __pycache__/
 *.pyc
 # Visual Studio Code
 .vscode/
+# Publish Profiles
+Properties/PublishProfiles/
