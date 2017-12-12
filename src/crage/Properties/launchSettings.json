@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "crage": {
+      "commandName": "Project",
+      "commandLineArgs": "-p \"D:\\GAL\\Eushully\\IKUSA0\\DATA3.ALF\" -o \"S:\\WorkSpace\\crass-0.4.14.1_unicode\\tmp\" -l \"D:\\GAL\\Eushully\\IKUSA0\\SYS4INI.BIN\" -v"
+    }
+  }
+}
