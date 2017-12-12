@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Crass.Plugin.ARCGameEngine
 {
-    public class Util
+    public static class Util
     {
-        public static byte[] LzssUncompress(byte[] compr, int length)
+        public static byte[] LzssUncompress(this byte[] compr, int length)
         {
             var uncompr = new byte[length];
 

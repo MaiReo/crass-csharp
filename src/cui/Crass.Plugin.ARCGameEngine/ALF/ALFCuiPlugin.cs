@@ -39,15 +39,15 @@ namespace Crass.Plugin.ARCGameEngine
                 return false;
             }
 
-            package.Index.Pio.Seek(0, SeekOrigin.Begin);
+            package.Index.Seek(0, SeekOrigin.Begin);
 
-            var magic = new string(package.Index.Pio.ReadBytes(4).Select(b => (char)(b)).ToArray());
+            var magic = new string(package.Index.ReadBytes(4).Select(b => (char)(b)).ToArray());
 
             if (magic.IsNotIn("S3IC", "S3IN", "S4IC", "S4IN"))
             {
                 return false;
             }
-            var version = new string(package.Index.Pio.ReadBytes(4).Select(b => (char)(b)).ToArray());
+            var version = new string(package.Index.ReadBytes(4).Select(b => (char)(b)).ToArray());
 
             const string check = "000 ";
             int i;

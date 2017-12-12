@@ -4,14 +4,14 @@ using System.Runtime.InteropServices;
 
 namespace Crass.PackageCore
 {
-    public static class PackageIoExtensions
+    public static class IPackageExtensions
     {
-        public static T? ReadStruct<T>(this IPackageIoOperation pio) where T : struct
+        public static T? ReadStruct<T>(this IPackage package) where T : struct
         {
             var buff = default(byte[]);
             try
             {
-                buff = pio.ReadBytes(Marshal.SizeOf<T>());
+                buff = package.ReadBytes(Marshal.SizeOf<T>());
             }
             catch
             {

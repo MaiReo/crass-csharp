@@ -22,7 +22,7 @@ namespace Crass.Plugin.ARCGameEngine
             var compr = default(byte[]);
             try
             {
-                compr = package.Pio.ReadBytes((int)header.Info.ComprLen);
+                compr = package.ReadBytes((int)header.Info.ComprLen);
             }
             catch
             {
@@ -36,7 +36,7 @@ namespace Crass.Plugin.ARCGameEngine
 
             if (header.Info.ActualLength != header.Info.ComprLen)
             {
-                package.PkgRes.ActualData = Util.LzssUncompress(compr, (int)header.Info.UncomprLen);
+                package.PkgRes.ActualData = compr.LzssUncompress((int)header.Info.UncomprLen);
             }
             else
             {
@@ -50,8 +50,8 @@ namespace Crass.Plugin.ARCGameEngine
         {
             try
             {
-                package.Pio.Seek(0, System.IO.SeekOrigin.Begin);
-                var header = package.Pio.ReadStruct<HeaderABMagic>();
+                package.Seek(0, System.IO.SeekOrigin.Begin);
+                var header = package.ReadStruct<HeaderABMagic>();
                 if (!header.HasValue) return false;
                 return header.Value.Magic.IsIn("S3AB", "S4AB");
             }
@@ -66,8 +66,8 @@ namespace Crass.Plugin.ARCGameEngine
         {
             try
             {
-                package.Pio.Seek(0, System.IO.SeekOrigin.Begin);
-                var h = package.Pio.ReadStruct<HeaderAB>();
+                package.Seek(0, System.IO.SeekOrigin.Begin);
+                var h = package.ReadStruct<HeaderAB>();
                 header = h ?? default(HeaderAB);
                 return h.HasValue;
             }

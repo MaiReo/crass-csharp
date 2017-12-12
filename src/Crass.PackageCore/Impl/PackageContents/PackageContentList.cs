@@ -22,7 +22,7 @@ namespace Crass.PackageCore
         {
             var contentIndex = PackageIndex[index];
             var data = Package
-                .Pio
+                
                 .Seek(contentIndex.Offset, System.IO.SeekOrigin.Begin)
                 .ReadBytes(contentIndex.Length);
             return new IndexedPackageContent()
@@ -38,7 +38,7 @@ namespace Crass.PackageCore
         protected virtual IPackageContent ContentAt(IPackageContentIndex contentIndex)
         {
             return new LazyPackageContent(() => Package
-                .Pio
+                
                 .Seek(contentIndex.Offset, System.IO.SeekOrigin.Begin)
                 .ReadBytes(contentIndex.Length))
             {

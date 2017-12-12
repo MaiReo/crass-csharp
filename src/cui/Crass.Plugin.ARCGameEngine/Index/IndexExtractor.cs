@@ -6,23 +6,23 @@ using System.Runtime.InteropServices;
 
 namespace Crass.Plugin.ARCGameEngine
 {
-    public class IndexExtractor
+    public static class IndexExtractor
     {
-        public static IPackageIndex ExtractIndex(IPackage package)
+        public static IPackageIndex ExtractIndex(this IPackage package)
         {
             var p = package.Index;
-            p.Pio.Seek(0, System.IO.SeekOrigin.Begin);
-            var nullHeader = p.Pio.ReadStruct<HeaderBIN>();
+            p.Seek(0, System.IO.SeekOrigin.Begin);
+            var nullHeader = p.ReadStruct<HeaderBIN>();
             if (!nullHeader.HasValue) return PackageIndex.Empty;
             var header = nullHeader.Value;
             byte[] data = null;
             var dataLength = 0;
             if (header.Magic.AsStringIn("S3IC", "S4IC")) //header每一个字段都少一位?
             {
-                var nullComp = p.Pio.ReadStruct<BIN_CompressInfo>();
+                var nullComp = p.ReadStruct<BIN_CompressInfo>();
                 if (!nullComp.HasValue) return PackageIndex.Empty;
                 var compInfo = nullComp.Value;
-                var compr = p.Pio.ReadBytes((int)compInfo.ComprLen);
+                var compr = p.ReadBytes((int)compInfo.ComprLen);
                 if (compInfo.ComprLen != compInfo.ActualLength)
                 {
                     var uncompr = Util.LzssUncompress(compr, (int)compInfo.UncomprLen + 2);
@@ -36,10 +36,10 @@ namespace Crass.Plugin.ARCGameEngine
             }
             else // "S3IN", "S4IN"
             {
-                var len = package.Index.Pio.GetLength();
+                var len = package.Index.GetLength();
                 var headerSize = Marshal.SizeOf<HeaderBIN>();
                 var size = (int)len - headerSize;
-                data = package.Pio.ReadBytes(size);
+                data = package.ReadBytes(size);
                 dataLength = size;
             }
             var dataIndex = 0;
