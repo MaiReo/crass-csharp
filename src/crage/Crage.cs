@@ -28,26 +28,19 @@ namespace Crass.Crage
 
         public static Crage Process(CrageCmdArgs args)
         {
-            var crage = new Crage();
-            try
+            var crage = new Crage
             {
-                crage.Packages = PackageHost.Current.BuildPackageFromCmdArgs(args);
-                crage.OutputDirBase = args.OutputDir;
-                crage.PackageContents = crage.Packages.ToDictionary(pkg => pkg, pkg => PluginHost.Current.Plugins
-                                    .Where(p => p.Direction == PluginCore.PluginDirection.Extract && p.SupportedExtensionName == pkg.ExtensionName)
-                                    .Where(p => (!p.IndexPackageRequired) || (p.IndexPackageRequired && pkg.Index != null))
-                                    .FirstOrDefault(p => p.IsMatch(pkg)))
-                                    .Where(x => x.Value != null)
-                                    .Select(x => x.Value.ExtractContent(x.Key))
-                                    .ToList();
-            }
-            catch (Exception ex)
-            {
-                if (!args.Quiet)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
+                Packages = PackageHost.Current.BuildPackageFromCmdArgs(args),
+                OutputDirBase = args.OutputDir
+            };
+            crage.PackageContents = from package in crage.Packages
+                                    let matchedPlugin = (from plugin in PluginHost.Current.Plugins
+                                                         where plugin.Direction == PluginCore.PluginDirection.Extract
+                                                         && (!plugin.IndexPackageRequired) || (plugin.IndexPackageRequired && package.Index != null)
+                                                         select plugin
+                                    ).FirstOrDefault(p => p.IsMatch(package))
+                                    where matchedPlugin != null
+                                    select matchedPlugin.ExtractContent(package);
 
             return crage;
         }
